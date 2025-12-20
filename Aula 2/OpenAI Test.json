@@ -1,0 +1,125 @@
+{
+  "name": "OpenAI Test",
+  "nodes": [
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "Gostaria de um prompt detalhado para criação de uma imagem do coliseu misturado com elementos de star wars."
+            },
+            {
+              "role": "system",
+              "content": "Voce é um especialista em criar prompts para imagens"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "d550d0a2-d780-40b7-a53b-bc82908df853",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "sjAhbyc2Tf5UDE45",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "1c7a5eca-6901-45eb-926b-e529688fe5f1",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "prompt": "={{ $json.output[0].content[0].text }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        560,
+        0
+      ],
+      "id": "fd453e19-cbd4-41f6-a878-006f1a372cd7",
+      "name": "Generate an image",
+      "credentials": {
+        "openAiApi": {
+          "id": "sjAhbyc2Tf5UDE45",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Cria um prompt e gera uma imagem",
+        "height": 320,
+        "width": 848
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -64,
+        -112
+      ],
+      "id": "73f54a78-5865-41f2-9d31-d298c77266c0",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Generate an image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "96ec9ab1-9430-472c-995d-a71593f28b1e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3d0e1a0b0322781bbba2af13fb10da10f23339b3428260da9479991a7faa878a"
+  },
+  "id": "khmpp2iP8GVbFpex",
+  "tags": []
+}
