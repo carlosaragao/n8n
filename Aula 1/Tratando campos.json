@@ -1,0 +1,170 @@
+{
+  "name": "Tratando campos",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -48,
+        0
+      ],
+      "id": "b0c304f6-54f6-43ad-9495-86b90f3685e4",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "056bdc6a-3314-48e8-804e-e48e5eb45950",
+              "name": "street",
+              "value": "={{ $json.street }}",
+              "type": "string"
+            },
+            {
+              "id": "280e672c-f230-4182-9c26-dd3e5f29c701",
+              "name": "cep",
+              "value": "={{ $json.cep }}",
+              "type": "string"
+            },
+            {
+              "id": "af415edf-6ced-44f3-9841-6eaf61b5ff5c",
+              "name": "location.type",
+              "value": "={{ $json.location.type }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        368,
+        0
+      ],
+      "id": "c718fb75-2d06-4770-8c79-5183dacb2161",
+      "name": "Dados"
+    },
+    {
+      "parameters": {
+        "url": "https://brasilapi.com.br/api/cep/v2/01538001",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        160,
+        0
+      ],
+      "id": "ffb945bd-b504-4fbd-adbc-63ece651e2f5",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "837f131e-2d42-4ce4-91f3-4ac53f7e697f",
+              "name": "nodeVersion",
+              "value": "={{ $nodeVersion }}",
+              "type": "string"
+            },
+            {
+              "id": "4313f433-fbde-4cf0-8b8e-0a53cf6aabb7",
+              "name": "workflow",
+              "value": "={{ $workflow }}",
+              "type": "string"
+            },
+            {
+              "id": "0cd1c305-c6f0-408a-af21-dad5a782bd98",
+              "name": "execution",
+              "value": "={{ $execution }}",
+              "type": "string"
+            },
+            {
+              "id": "fc5dc4bd-89b9-4789-935d-5266191371c3",
+              "name": "mode",
+              "value": "={{ $execution.mode }}",
+              "type": "string"
+            },
+            {
+              "id": "1b7b6467-4dcc-43c8-8ad1-26097bd09ecb",
+              "name": "today",
+              "value": "={{ $today }}",
+              "type": "string"
+            },
+            {
+              "id": "9040e90d-2aa3-4653-abb2-88adf13386ed",
+              "name": "vars",
+              "value": "={{ $vars }}",
+              "type": "string"
+            },
+            {
+              "id": "6e0579b8-8e3d-4b95-b494-40d799cf38fa",
+              "name": "input",
+              "value": "={{ $input }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        576,
+        0
+      ],
+      "id": "7edf0929-6db7-460a-94f6-fd74cbe4e60b",
+      "name": "Edit Fields"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dados": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Dados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "b3f7b22e-f898-464c-932a-d8edb62cc819",
+  "meta": {
+    "instanceId": "3d0e1a0b0322781bbba2af13fb10da10f23339b3428260da9479991a7faa878a"
+  },
+  "id": "KYJXsZ6O6SINb7Zh",
+  "tags": []
+}

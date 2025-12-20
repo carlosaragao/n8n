@@ -1,0 +1,199 @@
+{
+  "name": "Explosao Solar",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "75abf5ab-f8bb-4199-8ce0-2f6ee32f05e5",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "resource": "donkiSolarFlare",
+        "additionalFields": {
+          "startDate": "={{ $today.minus(30, 'days').format('yyyy-MM-dd') }}"
+        }
+      },
+      "type": "n8n-nodes-base.nasa",
+      "typeVersion": 1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "e1d125a3-bde7-41cd-9b8c-3010e84e6049",
+      "name": "Get a DONKI solar flare",
+      "credentials": {
+        "nasaApi": {
+          "id": "s0EO1FnN8kO94qcB",
+          "name": "NASA account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "37ce7589-fea5-456e-84da-fd92553f1f4a",
+              "leftValue": "={{ $json.classType }}",
+              "rightValue": "C",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        416,
+        0
+      ],
+      "id": "2b737fef-12dd-4d56-a9a2-3af8f5e30e63",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "content": "## Captura explosões solares",
+        "height": 320,
+        "width": 704
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -64,
+        -128
+      ],
+      "typeVersion": 1,
+      "id": "0049ab4a-db77-4f1d-8f0c-47db87ef0678",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7cb7ecae-d797-40f7-8027-4b2a1f76a115",
+              "name": "texto",
+              "value": "=Uma explosão solar de classe {{ $json.classType }} foi detectada na localização solar {{ $json.sourceLocation }}, iniciada em {{ $json.beginTime }}, com seu pico em {{ $json.peakTime }}, finalizada em {{ $json.endTime }}, mais informações em {{ $json.link }}.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        784,
+        -128
+      ],
+      "id": "534a08fd-2a73-499c-bcab-2219ebd04d8e",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "content": "## Converte em arquivos",
+        "height": 288,
+        "width": 480
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        736,
+        -208
+      ],
+      "typeVersion": 1,
+      "id": "4ed9efc4-6ec2-49ac-8221-5397cdf13caf",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "texto",
+        "options": {
+          "encoding": "utf8"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        992,
+        -128
+      ],
+      "id": "65bc2654-2b23-4206-9080-b6662907274e",
+      "name": "Convert to File"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get a DONKI solar flare",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a DONKI solar flare": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "43573047-7462-48d1-84a1-7f1d3031ad07",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3d0e1a0b0322781bbba2af13fb10da10f23339b3428260da9479991a7faa878a"
+  },
+  "id": "iFE9lycpkuuHZ87f",
+  "tags": []
+}
