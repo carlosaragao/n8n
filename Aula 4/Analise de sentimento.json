@@ -1,0 +1,208 @@
+{
+  "name": "Analise de sentimento",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Sentiment Analisis Form",
+        "formDescription": "Form to upload dataset",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "File",
+              "fieldType": "file",
+              "multipleFiles": false,
+              "acceptFileTypes": ".csv",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        -96,
+        48
+      ],
+      "id": "fd433973-808b-4bfb-a098-9ba1ea05bb95",
+      "name": "On form submission",
+      "webhookId": "fe26fe93-998b-4607-b9a0-ee8c332cf6f6",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "binaryPropertyName": "=File",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        128,
+        48
+      ],
+      "id": "146d2f1a-15ba-4d37-9b2c-1ab16211d50f",
+      "name": "Extract from File1"
+    },
+    {
+      "parameters": {
+        "inputText": "={{ $json.avaliacao }}",
+        "options": {
+          "enableAutoFixing": true
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.sentimentAnalysis",
+      "typeVersion": 1.1,
+      "position": [
+        352,
+        32
+      ],
+      "id": "b363bcaf-c96d-42e1-afe4-0b80fbe1d069",
+      "name": "Sentiment Analysis"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        352,
+        240
+      ],
+      "id": "5ef7ede6-0a77-48e2-a748-f62260d8de14",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "ot3HMMcRL6zGdtDm",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "binaryPropertyName": "={{ $json }}",
+        "options": {
+          "delimiter": ",",
+          "fileName": "positive",
+          "headerRow": true
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        912,
+        -208
+      ],
+      "id": "2dff50b7-e8ce-40f3-80ff-fda3207e6ca4",
+      "name": "Convert positive to file"
+    },
+    {
+      "parameters": {
+        "options": {
+          "delimiter": ",",
+          "fileName": "neutral",
+          "headerRow": true
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        912,
+        32
+      ],
+      "id": "3de5b082-c978-4669-8e38-2183b12ac201",
+      "name": "Convert neutral to file"
+    },
+    {
+      "parameters": {
+        "binaryPropertyName": "={{ $json }}",
+        "options": {
+          "delimiter": ",",
+          "fileName": "negative",
+          "headerRow": true
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        912,
+        272
+      ],
+      "id": "33a588ce-0e07-40ca-9f62-4d87bffc8ebd",
+      "name": "Convert negative to file"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Extract from File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File1": {
+      "main": [
+        [
+          {
+            "node": "Sentiment Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sentiment Analysis": {
+      "main": [
+        [
+          {
+            "node": "Convert positive to file",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Convert neutral to file",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Convert negative to file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Sentiment Analysis",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "3900630a-9810-4e20-9fab-05d917c357f7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3d0e1a0b0322781bbba2af13fb10da10f23339b3428260da9479991a7faa878a"
+  },
+  "id": "2WB1HIhxYtAaaESH",
+  "tags": []
+}

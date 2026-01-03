@@ -1,0 +1,150 @@
+{
+  "name": "Classificação de texto",
+  "nodes": [
+    {
+      "parameters": {
+        "inputText": "={{ $json.texto }}",
+        "categories": {
+          "categories": [
+            {
+              "category": "Tecnologia",
+              "description": "Textos relacionados a inovação tecnológica, desenvolvimento de software, hardware, inteligência artificial, ciência de dados, internet, startups, segurança da informação, automação, computação em nuvem, dispositivos eletrônicos e transformação digital. Inclui notícias, análises, lançamentos de produtos, tendências tecnológicas e discussões técnicas ou estratégicas sobre o uso da tecnologia na sociedade e nas empresas."
+            },
+            {
+              "category": "Esporte",
+              "description": "Textos relacionados a atividades esportivas, competições, atletas, times, campeonatos, resultados de jogos, treinamentos, desempenho físico, eventos esportivos e notícias do mundo do esporte em geral. Inclui tanto esportes profissionais quanto amadores, individuais ou coletivos."
+            },
+            {
+              "category": "Política",
+              "description": "Textos relacionados a governos, eleições, partidos políticos, políticas públicas, decisões governamentais, debates ideológicos, relações internacionais, economia política e atuação de figuras públicas no cenário político. Inclui análises, notícias, discursos e opiniões sobre o funcionamento do Estado e da democracia."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textClassifier",
+      "typeVersion": 1.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "a01e6cd4-b33d-4c24-9be9-c67db4cc4eb9",
+      "name": "Text Classifier"
+    },
+    {
+      "parameters": {
+        "formTitle": "Sentiment Analisis Form",
+        "formDescription": "Form to upload dataset",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "File",
+              "fieldType": "file",
+              "multipleFiles": false,
+              "acceptFileTypes": ".csv",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        -208,
+        16
+      ],
+      "id": "d9a7a24a-d47c-42eb-a607-dfc8733beb7b",
+      "name": "On form submission",
+      "webhookId": "fe26fe93-998b-4607-b9a0-ee8c332cf6f6",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "binaryPropertyName": "=File",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        16,
+        16
+      ],
+      "id": "8bb97e15-5937-46da-8cbb-3aa12e5fa619",
+      "name": "Extract from File1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatDeepSeek",
+      "typeVersion": 1,
+      "position": [
+        208,
+        224
+      ],
+      "id": "116d90f8-ad19-4d71-8289-d69c101df0f2",
+      "name": "DeepSeek Chat Model",
+      "credentials": {
+        "deepSeekApi": {
+          "id": "DRAjAxT9hseld4Po",
+          "name": "DeepSeek account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Extract from File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File1": {
+      "main": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DeepSeek Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text Classifier": {
+      "main": [
+        [],
+        [],
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "aa6d9473-26a8-4dd3-af90-d135ea36f7d0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3d0e1a0b0322781bbba2af13fb10da10f23339b3428260da9479991a7faa878a"
+  },
+  "id": "fURfRxGOanmmUSA7",
+  "tags": []
+}
