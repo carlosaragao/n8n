@@ -1,0 +1,90 @@
+{
+  "name": "Google Teste",
+  "nodes": [
+    {
+      "parameters": {
+        "inputDataFieldName": "File",
+        "name": "from n8n.csv",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "root",
+          "cachedResultName": "/ (Root folder)"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        96,
+        192
+      ],
+      "id": "b5831528-d40f-4843-b580-8c798de3b755",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "9de0uvkLSwQBFHA2",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formTitle": "Sentiment Analisis Form",
+        "formDescription": "Form to upload dataset",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "File",
+              "fieldType": "file",
+              "multipleFiles": false,
+              "acceptFileTypes": ".csv",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        -160,
+        192
+      ],
+      "id": "beadd86d-b183-4860-a49e-2bdb6f8fb84b",
+      "name": "On form submission",
+      "webhookId": "fe26fe93-998b-4607-b9a0-ee8c332cf6f6",
+      "alwaysOutputData": false
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "898ac62a-9f57-47ce-ac28-5bdf8e3e784b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3d0e1a0b0322781bbba2af13fb10da10f23339b3428260da9479991a7faa878a"
+  },
+  "id": "GoWOqTwhuX0GiFxV",
+  "tags": []
+}
