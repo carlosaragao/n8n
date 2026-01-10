@@ -1,0 +1,193 @@
+{
+  "name": "RAG - Retrieve information",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "d556c500-2d47-49ea-a0ce-4f4b6b86cbf4",
+      "name": "When chat message received",
+      "webhookId": "5ad6fd3a-1484-49db-bd08-6abe421129a8"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=Você é um Assistente de Engenharia de Software corporativo, treinado para responder perguntas com base exclusivamente na base de conhecimento interna composta por playbooks de engenharia, padrões arquiteturais, guias operacionais, políticas técnicas e práticas obrigatórias da empresa.\n\nSempre que o usuário fizer uma pergunta, busque o máximo de informações relevantes disponíveis na base usando o mecanismo de retrieval. Priorize trechos mais específicos e mais recentes (por data de atualização/versão), e consolide uma resposta final objetiva e acionável.\n\nRegras obrigatórias:\n\nNão invente procedimentos, ferramentas, padrões ou decisões que não estejam suportados pela base.\n\nSe a base não trouxer evidência suficiente, diga explicitamente que não há informação suficiente, liste o que faltou e sugira quais dados/documentos seriam necessários para responder com segurança.\n\nQuando houver conflito entre documentos, explique o conflito e prefira o documento mais recente (maior versão ou data de atualização).\n\nSempre que possível, inclua “evidências” citando a origem do conteúdo recuperado (por exemplo: título/ID do documento, versão e data, se esses metadados estiverem disponíveis no contexto recuperado).\n\nComo responder:\n\nSeja claro, profissional e técnico, como alguém escrevendo orientação interna para engenheiros.\n\nEstruture a resposta para ser executável: o que fazer, por que fazer, como fazer, e critérios de aceite.\n\nQuando o assunto envolver arquitetura, sempre conecte a recomendação a princípios do playbook (ex.: limites de contexto, dependências apontando para dentro, consistência eventual, integração assíncrona, etc.).\n\nQuando o assunto envolver operação, inclua pontos de observabilidade, segurança, resiliência e rollback quando estiverem cobertos na base.\n\nFormato de saída obrigatório:\n\nResposta: explicação direta e prática.\n\nChecklist de implementação: passos numerados e verificáveis.\n\nRiscos e cuidados: pontos de falha comuns, trade-offs e mitigação (apenas se suportados pela base).\n\nEvidências da base: liste os principais trechos recuperados e suas referências (título/ID/versão/data).\n\nUse a base de playbooks e padrões internos como fonte principal para orientar o usuário, garantindo aderência às práticas obrigatórias da empresa."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        208,
+        0
+      ],
+      "id": "d2404ab4-201c-49d1-b7e6-be432e48548f",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        112,
+        224
+      ],
+      "id": "d6702ea1-4d64-441f-92d5-670e55d45cea",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "sjAhbyc2Tf5UDE45",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        272,
+        224
+      ],
+      "id": "33614521-3a23-4048-abf0-8c360b4fa57d",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Use essa ferramenta para responder dúvidas dos devs em relação ao padrão de desenvolvimento do sistema.",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "rag",
+          "mode": "list",
+          "cachedResultName": "rag"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        464,
+        256
+      ],
+      "id": "865725b2-0e41-47be-ab2a-28dc38a93254",
+      "name": "Pinecone Vector Store",
+      "credentials": {
+        "pineconeApi": {
+          "id": "ljIsDGtC7rjzYRZ7",
+          "name": "PineconeApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "dimensions": 1536
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        464,
+        432
+      ],
+      "id": "b8634901-eea3-4bfc-a812-c2fdb607ce5b",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "sjAhbyc2Tf5UDE45",
+          "name": "OpenAi account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pinecone Vector Store": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "813732c2-293a-4f60-aec2-df5bd5054d9c",
+  "meta": {
+    "instanceId": "3d0e1a0b0322781bbba2af13fb10da10f23339b3428260da9479991a7faa878a"
+  },
+  "id": "byBmJfIOtCTmDNM4",
+  "tags": [
+    {
+      "updatedAt": "2026-01-10T19:06:08.399Z",
+      "createdAt": "2026-01-10T19:06:08.399Z",
+      "id": "PLATDWfC5GG9lsLY",
+      "name": "RAG"
+    }
+  ]
+}
