@@ -1,0 +1,283 @@
+{
+  "name": "MA - Orquestrador de universos",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "f2f53c38-00de-418e-92c8-9cbf0f1c1e82",
+      "name": "When chat message received",
+      "webhookId": "46a0a5f2-fbcc-46af-9282-c5dc7e797f58"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=Você é o AGENTE PRINCIPAL (ORQUESTRADOR + CRONISTA) de um sistema multiagente que gera universos fictícios.\n\nOBJETIVO:\nTransformar um CONCEITO BASE em um universo coerente, chamando 4 agentes especialistas (Geógrafo, Historiador, Sociólogo) e consolidando o resultado em um texto final.\n\nENTRADA:\n- conceito_base: {{ $json.chatInput }}\n\nAGENTES DISPONÍVEIS (cada um retorna JSON estrito):\n1) Geógrafo: cria geografia conceitual do mundo.\n2) Historiador: cria passado macro e tensões históricas.\n3) Sociólogo: cria culturas e conflitos sociais.\n\nREGRAS GERAIS:\n- Você DEVE orquestrar na ordem: Geógrafo -> Historiador -> Sociólogo.\n- Você DEVE reutilizar exatamente a saída dos agentes; não “reinvente” fatos fora do que foi retornado.\n- Quando encontrar inconsistências, você NÃO deve inventar uma solução: você deve corrigir chamando novamente o agente responsável com instruções de ajuste.\n- Mantenha o mundo criativo, mas internamente consistente (recursos, geografia, história e cultura devem “encaixar”).\n- Evite nomes genéricos (ex.: “Reino do Norte”). Use nomes originais, mas pronunciáveis em português.\n- O resultado final deve ser utilizável como “lore” de RPG/livro/jogo.\n\nFORMATO DE TRABALHO (OBRIGATÓRIO):\nVocê deve seguir exatamente estas fases:\n\nFASE 1 — CHAMAR GEÓGRAFO\n- Solicite ao Geógrafo que produza JSON no schema definido.\n- Aguarde a resposta.\n- Verifique: 3 a 6 regiões; relações geográficas presentes.\n\nFASE 2 — CHAMAR HISTORIADOR\n- Envie ao Historiador o conceito_base + geografia como referência.\n- Aguarde resposta.\n- Verifique: pelo menos 2 eras; 2 a 4 eventos; conflito latente.\n\nFASE 3 — CHAMAR SOCIÓLOGO\n- Envie conceito_base + geografia + história.\n- Aguarde resposta.\n- Verifique: 2 a 4 culturas; conflito social claro; relações entre culturas.\n\nFASE 4 — CONSOLIDAÇÃO E VALIDAÇÃO FINAL\n- Valide consistência com um checklist:\n  (b) As culturas fazem sentido com a história e geografia?\n  (c) O conflito latente histórico conversa com conflito social?\n- Se falhar em algum item, faça uma RECHAMADA ao agente responsável com instruções objetivas de correção.\n\nFASE 6 — SAÍDA FINAL\n\nPARTE B) TEXTO CRONÍSTICO FINAL (Markdown, 4 a 8 parágrafos)\n- Introduza o mundo e o conceito central.\n- Apresente as regiões (sem virar lista; faça fluir).\n- Conecte passado e culturas de forma integrada.\n- Feche com o(s) conflito(s) central(is) como gancho narrativo.\n- NÃO crie novas regiões/culturas/moedas além do que está no JSON.\n\nIMPORTANTE SOBRE SAÍDA:\n- Ao final, você deve imprimir primeiro o JSON (PARTE A) e depois o texto em Markdown (PARTE B).\n- Não inclua comentários fora dessas duas partes.\n\nAGORA, INICIE A FASE 1."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        344,
+        0
+      ],
+      "id": "f9c56519-29eb-4446-98dd-8b5ff23b70d8",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        224,
+        224
+      ],
+      "id": "13de45d4-9e38-4c4b-864e-9b63878ecd68",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "sjAhbyc2Tf5UDE45",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "dei1BJp1Ggucngrz",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/dei1BJp1Ggucngrz",
+          "cachedResultName": "MA - Geógrafo"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "conceito_base": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('conceito_base', ``, 'string') }}"
+          },
+          "matchingColumns": [
+            "conceito_base"
+          ],
+          "schema": [
+            {
+              "id": "conceito_base",
+              "displayName": "conceito_base",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        352,
+        224
+      ],
+      "id": "ec8852e6-ed0a-489f-a0fc-966ab3f7fc54",
+      "name": "Call 'MA - Geógrafo'"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "pr3RR26iEspdLdKR",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/pr3RR26iEspdLdKR",
+          "cachedResultName": "MA - Historiador"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "conceito_base": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('conceito_base', ``, 'string') }}",
+            "geografia": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('geografia', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "conceito_base",
+              "displayName": "conceito_base",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "geografia",
+              "displayName": "geografia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        480,
+        224
+      ],
+      "id": "773a8b09-dba1-44e1-8fce-4e1f4072b9be",
+      "name": "Call 'MA - Historiador'"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "XC17vifZsHGTJy9d",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/XC17vifZsHGTJy9d",
+          "cachedResultName": "MA - Sociólogo"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "conceito_base": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('conceito_base', ``, 'string') }}",
+            "geografia": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('geografia', ``, 'string') }}",
+            "historia": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('historia', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "conceito_base",
+              "displayName": "conceito_base",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "geografia",
+              "displayName": "geografia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "historia",
+              "displayName": "historia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        608,
+        224
+      ],
+      "id": "832a30a2-d72d-41d5-b6f5-51476d5a9da7",
+      "name": "Call 'MA - Sociólogo'"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'MA - Geógrafo'": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'MA - Historiador'": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'MA - Sociólogo'": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "7db37b28-2327-428a-add8-6bfe880182f7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3d0e1a0b0322781bbba2af13fb10da10f23339b3428260da9479991a7faa878a"
+  },
+  "id": "cMSFlF2AQxFF5iTc",
+  "tags": []
+}
