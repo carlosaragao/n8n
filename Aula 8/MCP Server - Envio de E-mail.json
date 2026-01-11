@@ -1,0 +1,101 @@
+{
+  "name": "MCP Server - Envio de E-mail",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "e5c2f2f3-c12c-4567-b227-84f5e6bfde9a"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "a7091de2-aecd-40ea-b1f5-6593c62e7921",
+      "name": "MCP Server Trigger",
+      "webhookId": "e5c2f2f3-c12c-4567-b227-84f5e6bfde9a"
+    },
+    {
+      "parameters": {
+        "sendTo": "professor.carlosaragao@gmail.com",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        16,
+        224
+      ],
+      "id": "936654d6-1cb1-4738-9cdc-ed336484d80b",
+      "name": "Envio de e-mail",
+      "webhookId": "910e2e36-707e-4d60-b1d1-efc3837ced76",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "B7JxcRP1PsYh5nvk",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        160,
+        224
+      ],
+      "id": "d3745cb1-e4a9-497e-a2a0-0e4d2360e7e3",
+      "name": "Cria rascunho",
+      "webhookId": "16846529-8b66-4130-98fe-93e1d9211db7",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "B7JxcRP1PsYh5nvk",
+          "name": "Gmail account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Envio de e-mail": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cria rascunho": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "43e25933-767b-4886-85fa-aa8d14b7d1c5",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3d0e1a0b0322781bbba2af13fb10da10f23339b3428260da9479991a7faa878a"
+  },
+  "id": "c1CHDf7yruE5T7AV",
+  "tags": []
+}
